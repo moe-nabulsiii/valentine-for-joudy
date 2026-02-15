@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>For Joudy ❤️</title>
+
+<style>
+body{
+    margin:0;
+    height:100vh;
+    overflow:hidden;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:linear-gradient(135deg,#ffd6e7,#ffeef5);
+    font-family:Arial, sans-serif;
+}
+
+/* Shake effect */
+.shake{
+    animation:shake .3s infinite;
+}
+@keyframes shake{
+    0%{transform:translate(2px,2px);}
+    25%{transform:translate(-2px,2px);}
+    50%{transform:translate(-2px,-2px);}
+    75%{transform:translate(2px,-2px);}
+    100%{transform:translate(2px,2px);}
+}
+
+/* Floating hearts */
+.heart{
+    position:absolute;
+    color:#ff4d6d;
+    animation: float 6s linear infinite;
+}
+@keyframes float{
+    from{ transform:translateY(100vh); opacity:1; }
+    to{ transform:translateY(-10vh); opacity:0; }
+}
+
+.box{
+    text-align:center;
+    background:white;
+    padding:40px;
+    border-radius:20px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.2);
+    z-index:2;
+}
+
+h1{ color:#ff4d6d; }
+
+button{
+    padding:12px 30px;
+    font-size:18px;
+    border:none;
+    border-radius:30px;
+    cursor:pointer;
+    margin:10px;
+}
+
+#yes{ background:#4CAF50;color:white; }
+#no{ background:#ff4d4d;color:white; position:absolute; }
+
+#timer{
+    margin-top:15px;
+    font-size:18px;
+    color:#555;
+}
+
+/* Angry Cat (NO result) */
+#catBox{
+    display:none;
+    text-align:center;
+    z-index:2;
+}
+
+#catBox img{
+    width:350px;
+    max-width:85%;
+    border-radius:15px;
+    margin-top:20px;
+    animation: zoomCat 6s ease-in-out forwards;
+}
+
+@keyframes zoomCat{
+    from{ transform:scale(1); }
+    to{ transform:scale(1.3); }
+}
+
+/* Love result */
+#loveBox{
+    display:none;
+    text-align:center;
+    z-index:2;
+}
+
+#loveBox img{
+    width:300px;
+    max-width:80%;
+    border-radius:15px;
+    margin-top:20px;
+}
+
+/* Confetti */
+.confetti{
+    position:absolute;
+    width:10px;
+    height:10px;
+    animation:fall 3s linear forwards;
+}
+@keyframes fall{
+    to{
+        transform:translateY(100vh) rotate(720deg);
+        opacity:0;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="box" id="mainBox">
+<h1>Joudy, will you be my valentine? 🌹</h1>
+<button id="yes">Yes</button>
+<button id="no">No</button>
+<div id="timer">Time left: 10</div>
+</div>
+
+<!-- Angry Cat -->
+<div id="catBox">
+<h1>You had ONE job 😾</h1>
+<img src="https://media.tenor.com/_09v4ZEZP8cAAAAM/angry-cat-sassy-cat.gif">
+</div>
+
+<!-- Love Result -->
+<div id="loveBox">
+<h1>
+You just made me the happiest person alive ❤️<br><br>
+From the moment I met you, my world became brighter.  
+I promise to always make you smile, protect your heart,  
+and love you more every single day. 💌
+</h1>
+
+<!-- YOUR LOCAL IMAGE -->
+<img src="heartcat.jpg" alt="Cute heart cat">
+
+</div>
+
+<script>
+const noBtn=document.getElementById("no");
+const yesBtn=document.getElementById("yes");
+const box=document.getElementById("mainBox");
+const catBox=document.getElementById("catBox");
+const loveBox=document.getElementById("loveBox");
+const timerText=document.getElementById("timer");
+
+let time=10;
+let tries=0;
+
+noBtn.style.left="60%";
+noBtn.style.top="55%";
+
+/* NO button escape */
+document.addEventListener("mousemove",(e)=>{
+ const rect=noBtn.getBoundingClientRect();
+ const distance=Math.hypot(e.clientX-rect.left,e.clientY-rect.top);
+
+ if(distance<120){
+   const maxX=window.innerWidth-100;
+   const maxY=window.innerHeight-60;
+
+   noBtn.style.left=Math.random()*maxX+"px";
+   noBtn.style.top=Math.random()*maxY+"px";
+
+   tries++;
+
+   if(tries>=7){
+     noBtn.innerText="Stop trying 😭";
+   }
+
+   if(tries>=12){
+     document.body.classList.add("shake");
+   }
+ }
+});
+
+/* Timer */
+const countdown=setInterval(()=>{
+ time--;
+ timerText.innerText="Time left: "+time;
+
+ if(time<=0){
+   clearInterval(countdown);
+   box.style.display="none";
+   catBox.style.display="block";
+ }
+},1000);
+
+/* YES Click */
+yesBtn.onclick=()=>{
+ clearInterval(countdown);
+ explodeConfetti();
+ box.style.display="none";
+ catBox.style.display="none";
+ loveBox.style.display="block";
+ document.body.classList.remove("shake");
+};
+
+/* Confetti */
+function explodeConfetti(){
+ for(let i=0;i<150;i++){
+   const conf=document.createElement("div");
+   conf.className="confetti";
+
+   // Random horizontal position
+   conf.style.left = Math.random() * 100 + "vw";
+
+   // Random vertical starting position (not same line)
+   conf.style.top = Math.random() * 100 + "vh";
+
+   conf.style.background = `hsl(${Math.random()*360},100%,50%)`;
+
+   document.body.appendChild(conf);
+
+   setTimeout(()=>conf.remove(),3000);
+ }
+}
+
+
+/* Floating hearts */
+setInterval(()=>{
+ const heart=document.createElement("div");
+ heart.className="heart";
+ heart.innerHTML="❤";
+ heart.style.left=Math.random()*100+"vw";
+ heart.style.fontSize=(Math.random()*20+15)+"px";
+ heart.style.animationDuration=(Math.random()*3+3)+"s";
+ document.body.appendChild(heart);
+ setTimeout(()=>heart.remove(),6000);
+},300);
+</script>
+
+</body>
+</html>
